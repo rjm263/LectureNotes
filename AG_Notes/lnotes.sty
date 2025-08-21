@@ -1,0 +1,278 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lnotes}[2018/07/08 r534]
+
+
+\gdef\@fpheader{algebraic geometry lecture notes}
+\gdef\@journal{}
+
+\ProcessOptions\relax
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english]{babel}
+\RequirePackage[top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{mathrsfs,mathdots}
+\RequirePackage{physics}
+\RequirePackage{mathtools}
+\RequirePackage{scalerel,stackengine} % only for \remove (see below)
+\RequirePackage{stmaryrd}
+\RequirePackage{pst-node}
+\RequirePackage{tikz-cd}
+\RequirePackage{tikz}
+\RequirePackage{physics}
+\RequirePackage{aliascnt}
+\RequirePackage{graphicx}
+\RequirePackage{fancyhdr}
+\RequirePackage{enumitem}
+\RequirePackage{xpatch}
+\RequirePackage{xcolor}
+	\definecolor{darkblue}{cmyk}{1,.7,.16,0}
+\RequirePackage[colorlinks=true
+,urlcolor=darkblue
+,anchorcolor=darkblue
+,citecolor=darkblue
+,filecolor=darkblue
+,linkcolor=darkblue
+,menucolor=darkblue
+,linktocpage=true
+,pdfproducer=medialab
+,pdfa=true
+]{hyperref}
+
+
+\def\a#1{\gdef\@a{#1}}
+\def\@a{\@latex@error{No \noexpand\a given}\@ehc}
+\def\term#1{\gdef\@term{#1}}
+\def\@term{\@latex@error{No \noexpand\term given}\@ehc}
+\def\lecturer#1{\gdef\@lecturer{#1}}
+\def\@lecturer{\@latex@error{No \noexpand\lecturer given}\@ehc}
+\def\email#1{\gdef\@email{#1}}
+\def\@email{\@latex@error{No \noexpand\email given}\@ehc}
+\def\institution#1{\gdef\@institution{#1}}
+\def\@institution{\@latex@error{No \noexpand\institution given}\@ehc}
+\def\program#1{\gdef\@program{#1}}
+\def\@program{\@latex@error{No \noexpand\program given}\@ehc}
+
+
+% page numbering
+\newcommand\ps@myplain{
+	\pagenumbering{arabic}
+	\renewcommand\@oddfoot{\hfill-- \thepage\ --\hfill}
+	\renewcommand\@oddhead{}}
+\let\ps@plain=\ps@myplain
+
+% No dots in the table of contents
+\renewcommand{\@dotsep}{10000}
+
+\setlist[enumerate,1]{label=\normalfont(\roman*)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page and toc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\maketitle}{
+\thispagestyle{empty}
+\setcounter{page}{0}
+\begin{center}
+	\phantom{bla}\\\vspace{3em}
+	{\Large \@program}\par
+	\vspace{2em}
+	{\Large \@institution}\par
+	\vspace{2em}
+	{\Large \@term\ \@a}\par
+	\vfill
+	{\Huge\bfseries\@title}
+	\vfill
+	\includegraphics[width=.3\textwidth]{img.pdf}
+	\vfill
+	{\Large Lecturer: \@lecturer}\par
+	\vspace{2em}
+	{\Large Scribe: \@author}\par
+	\vspace{3em}
+	\phantom{bla}
+\end{center}
+\newpage
+\pagestyle{myplain}\pagenumbering{arabic}
+\section*{Literature}
+	There is no single, accessible book that captures the course contents entirely and adequately. References covering different parts of the course are:
+	\begin{itemize}
+		\item A. Gathmann's lecture notes on Algebraic Geometry, available at \\\href{https://www.mathematik.uni-kl.de/~gathmann/de/alggeom.php}{https://www.mathematik.uni-kl.de/~gathmann/de/alggeom.php}
+		\item A. Gathmann's lecture notes on Commutative Algebra, available at \\\href{https://www.mathematik.uni-kl.de/~gathmann/de/commalg.php}{https://www.mathematik.uni-kl.de/~gathmann/de/commalg.php}
+		\item J.S. Milne's notes on Algebraic Geometry, available at \\\href{https://www.jmilne.org/math/CourseNotes/ag.html}{https://www.jmilne.org/math/CourseNotes/ag.html}
+		\item The Stacks project, \href{https://stacks.math.columbia.edu/browse}{https://stacks.math.columbia.edu/browse}
+		\item R. Vakil's notes The Rising Sea, available at\\\href{http://math.stanford.edu/~vakil/216blog/}{http://math.stanford.edu/\textasciitilde vakil/216blog/}
+		\item R. Hartshorne's book on Algebraic Geometry
+	\end{itemize}
+	We refer to Gathmann's notes rather frequently and abbreviate them by [G1] for Algebraic Geometry and [G2] for Commutative Algebra. We also refer to Hartshorne's book [H] and Vakil's notes [V] occasionally.
+\newpage
+\hrule
+\vspace{1em}
+\tableofcontents
+\vspace{2em}
+\hrule
+}
+
+%number equations according to the sections
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\numberwithin{equation}{section}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem etc numbering, aliascing and referencing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newaliascnt{lemma}{thm}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{thm}
+\newtheorem{prop}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{thm}
+\newtheorem{cor}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+
+\theoremstyle{definition}
+\newaliascnt{defi}{thm}
+\newtheorem{defi}[defi]{Definition}
+\aliascntresetthe{defi}
+\providecommand*{\defiautorefname}{Definition}
+\newaliascnt{eg}{thm}
+\newtheorem{eg}[eg]{Example}
+\aliascntresetthe{eg}
+\providecommand*{\egautorefname}{Example}
+\newaliascnt{remark}{thm}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+\providecommand*{\remarkautorefname}{Remark}
+\newaliascnt{pro}{thm}
+\newtheorem{pro}[pro]{Properties}
+\aliascntresetthe{pro}
+\providecommand*{\proautorefname}{Properties}
+\newaliascnt{exc}{thm}
+\newtheorem{exc}[exc]{Exercise}
+\aliascntresetthe{exc}
+\providecommand*{\proautorefname}{Exercise}
+
+% remove last dot in numbering
+\AtBeginDocument{\xpatchcmd{\@thm}{\thm@headpunct{.}}{\thm@headpunct{}}{}{}}
+
+\renewcommand{\qedsymbol}{$\square$}
+\newcommand{\thmautorefname}{Theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% newcommands for matrix gps, algebras, special sets and operators
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Contradition symbol
+\newcommand{\contradiction}{{\hbox{%
+    \setbox0=\hbox{$\mkern-3mu\times\mkern-3mu$}%
+    \setbox1=\hbox to0pt{\hss$\times$\hss}%
+    \copy0\raisebox{0.5\wd0}{\copy1}\raisebox{-0.5\wd0}{\box1}\box0
+}}}
+
+% plus over cdot
+\newcommand{\plusdot}{\mathrel{\raise.6ex\hbox{+}\!\!\!\raise-.7ex\hbox{\cdot}}}
+
+% symbol for removing components
+\newcommand\remove[1]{\ThisStyle{%
+  \setbox0=\hbox{$\SavedStyle#1$}%
+  \stackengine{4pt-\LMpt}{$\SavedStyle#1$}{%
+    \stretchto{\scaleto{\SavedStyle\mkern.2mu\curlywedge}{.65\wd0}}{.5\ht0}%
+%    .2mu is the kern imbalance when clipping white space
+%    .5467++++ is \ht/[kerned \wd] aspect ratio for \sim glyph
+  }{O}{c}{F}{T}{S}%
+}}
+
+\newcommand{\K}[1][n]{K[T_1,\dots,T_{#1}]}
+\newcommand{\x}[2][0]{[x_{#1}: \ldots :x_{#2}]}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\qt}[1]{`#1'}
+
+
+% Matrix groups
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Or}{\mathrm{O}}
+\newcommand{\PGL}{\mathrm{PGL}}
+\newcommand{\PSL}{\mathrm{PSL}}
+\newcommand{\PSO}{\mathrm{PSO}}
+\newcommand{\PSU}{\mathrm{PSU}}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\Spin}{\mathrm{Spin}}
+\newcommand{\Sp}{\mathrm{Sp}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\Un}{\mathrm{U}}
+\newcommand{\Mat}{\mathrm{Mat}}
+
+% Matrix algebras
+\newcommand{\gl}{\mathfrak{gl}}
+\newcommand{\ort}{\mathfrak{o}}
+\newcommand{\so}{\mathfrak{so}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\uu}{\mathfrak{u}}
+\renewcommand{\sl}{\mathfrak{sl}}
+
+% Special sets
+\newcommand{\CC}{\mathbb{C}}
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\L}{\mathcal{L}}
+\renewcommand{\AA}{\mathbb{A}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\GG}{\mathbb{G}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\H}{\mathbb{H}}
+\newcommand{\inclusion}{\hookrightarrow}
+
+% Math Operators
+\DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\Ann}{Ann}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Char}{char}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\image}{image}
+\DeclareMathOperator{\Frac}{Frac}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\map}{Map}
+\DeclareMathOperator{\spa}{span}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\modd}{mod}
+\DeclareMathOperator{\codim}{codim}
+\DeclareMathOperator{\der}{Der}
+\DeclareMathOperator{\msp}{mSpec}
+\DeclareMathOperator{\spec}{Spec}
+\DeclareMathOperator{\Div}{Div}
+\DeclareMathOperator{\divv}{div}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\pic}{Pic}
+\DeclareMathOperator{\cl}{Cl}
+\DeclareMathOperator{\trd}{trdeg}
+\newcommand{\Bilin}{\mathrm{Bilin}}
+\newcommand{\Frob}{\mathrm{Frob}}
+
+%Misc
+\newcommand{\ra}{\rightarrow}
+\newcommand{\e}[1]{\mathrm{e}^{#1}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\cc}{C_{\ast}}
+\newcommand{\cx}[2][\ast]{C_{#1}(#2)}
+\newcommand{\rcx}[2][\ast]{\tilde{C}_{#1}(#2)}
+\newcommand{\hg}[2][\ast]{H_{#1}(#2)}
+\newcommand{\rhg}[2][\ast]{\tilde{H}_{#1}(#2)}
+\newcommand{\an}[1]{\langle #1\rangle}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\J}{\mathcal{J}}
+\newcommand{\res}{\mathrm{res}}
+\newcommand{\cech}{$\check{\text{C}}$ech}

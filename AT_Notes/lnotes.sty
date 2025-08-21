@@ -1,0 +1,222 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lnotes}[2018/07/08 r534]
+
+
+\gdef\@fpheader{Part III lecture notes}
+\gdef\@journal{}
+
+\ProcessOptions\relax
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english]{babel}
+\RequirePackage[top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\RequirePackage{setspace}
+\RequirePackage{amsmath,amssymb,amsthm}
+\RequirePackage{mathrsfs,mathdots}
+\RequirePackage{mathtools}
+\RequirePackage{pst-node}
+%\RequirePackage{auto-pst-pdf}
+\RequirePackage{tikz-cd}
+\RequirePackage{tikz}
+\RequirePackage{physics}
+\RequirePackage{aliascnt}
+\RequirePackage{graphicx}
+\RequirePackage{fancyhdr}
+\RequirePackage{enumitem}
+\RequirePackage{xpatch}
+\RequirePackage{xcolor}
+\RequirePackage[colorlinks=true
+,urlcolor=blue
+,anchorcolor=blue
+,citecolor=blue
+,filecolor=blue
+,linkcolor=blue
+,menucolor=blue
+,linktocpage=true
+,pdfproducer=medialab
+,pdfa=true
+]{hyperref}
+
+
+\def\a#1{\gdef\@a{#1}}
+\def\@a{\@latex@error{No \noexpand\a given}\@ehc}
+\def\term#1{\gdef\@term{#1}}
+\def\@term{\@latex@error{No \noexpand\term given}\@ehc}
+\def\lecturer#1{\gdef\@lecturer{#1}}
+\def\@lecturer{\@latex@error{No \noexpand\lecturer given}\@ehc}
+\def\email#1{\gdef\@email{#1}}
+\def\@email{\@latex@error{No \noexpand\email given}\@ehc}
+
+\onehalfspacing
+
+% page numbering
+\newcommand\ps@myplain{
+	\pagenumbering{arabic}
+	\renewcommand\@oddfoot{\hfill-- \thepage\ --\hfill}
+	\renewcommand\@oddhead{}}
+\let\ps@plain=\ps@myplain
+
+% No dots in the table of contents
+\renewcommand{\@dotsep}{10000}
+
+\setlist[enumerate,1]{label=(\roman*)}
+
+\renewcommand{\maketitle}{
+\thispagestyle{empty}
+\setcounter{page}{0}
+\begin{center}
+	\phantom{bla}\\\vspace{3em}
+	{\Large Part III of the Mathematical Tripos}\par
+	\vspace{2em}
+	{\Large University of Cambridge}\par
+	\vspace{2em}
+	{\Large \@term\ \@a}\par
+	\vfill
+	{\Huge\bfseries\@title}
+	\vfill
+	\includegraphics[width=.8\textwidth]{img.pdf}
+	\vfill
+	{\Large Lecturer: \@lecturer}\par
+	\vspace{2em}
+	{\Large Scribe: \@author}\par
+	\vspace{3em}
+	\phantom{bla}
+\end{center}
+%\newpage
+%\pagestyle{empty}
+%\noindent These notes emerged from a lecture in \@title\ taught in \@term\ \@a\ at the Centre of Mathematical Sciences in the course of Part III of the Mathematical Tripos at the University of Cambridge. The author does by no means claim correctness and completeness of the notes. Any comments and/or corrections can be emailed to \href{mailto:\@email}{\@email}. Cheers!
+\newpage
+%
+%\ifnotoc\else
+%\iftoccontinuous\else\newpage\fi
+%\beforetochook\hrule
+\hrule
+\vspace{1em}
+\tableofcontents
+\vspace{2em}
+\hrule
+%\fi
+%
+\pagestyle{myplain}\pagenumbering{arabic}
+}
+
+%number equations after the sections
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+\numberwithin{equation}{section}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem etc numbering, aliascing and referencing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newaliascnt{lemma}{thm}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\providecommand*{\lemmaautorefname}{Lemma}
+\newaliascnt{prop}{thm}
+\newtheorem{prop}[prop]{Proposition}
+\aliascntresetthe{prop}
+\providecommand*{\propautorefname}{Proposition}
+\newaliascnt{cor}{thm}
+\newtheorem{cor}[cor]{Corollary}
+\aliascntresetthe{cor}
+\providecommand*{\corautorefname}{Corollary}
+
+\theoremstyle{definition}
+\newaliascnt{defi}{thm}
+\newtheorem{defi}[defi]{Definition}
+\aliascntresetthe{defi}
+\providecommand*{\defiautorefname}{Definition}
+\newaliascnt{eg}{thm}
+\newtheorem{eg}[eg]{Example}
+\aliascntresetthe{eg}
+\providecommand*{\egautorefname}{Example}
+%\newtheorem{ex}thm{Exercise}
+\newaliascnt{remark}{thm}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+\providecommand*{\remarkautorefname}{Remark}
+\newaliascnt{pro}{thm}
+\newtheorem{pro}[pro]{Properties}
+\aliascntresetthe{pro}
+\providecommand*{\proautorefname}{Properties}
+
+% remove last dot in numbering
+\AtBeginDocument{\xpatchcmd{\@thm}{\thm@headpunct{.}}{\thm@headpunct{}}{}{}}
+
+\renewcommand{\qedsymbol}{$\square$}
+\newcommand{\thmautorefname}{Theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% newcommands for matrix gps, algebras, special sets and operators
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Matrix groups
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Or}{\mathrm{O}}
+\newcommand{\PGL}{\mathrm{PGL}}
+\newcommand{\PSL}{\mathrm{PSL}}
+\newcommand{\PSO}{\mathrm{PSO}}
+\newcommand{\PSU}{\mathrm{PSU}}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\Spin}{\mathrm{Spin}}
+\newcommand{\Sp}{\mathrm{Sp}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\Un}{\mathrm{U}}
+\newcommand{\Mat}{\mathrm{Mat}}
+
+% Matrix algebras
+\newcommand{\gl}{\mathfrak{gl}}
+\newcommand{\ort}{\mathfrak{o}}
+\newcommand{\so}{\mathfrak{so}}
+\newcommand{\su}{\mathfrak{su}}
+\newcommand{\uu}{\mathfrak{u}}
+\renewcommand{\sl}{\mathfrak{sl}}
+
+% Special sets
+\newcommand{\Co}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\GG}{\mathbb{G}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\H}{\mathbb{H}}
+\newcommand{\inclusion}{\hookrightarrow}
+
+% Algebra
+\DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\Ann}{Ann}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Char}{char}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\fix}{fix}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\image}{image}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\map}{Map}
+\DeclareMathOperator{\spa}{span}
+\DeclareMathOperator{\inte}{int}
+\DeclareMathOperator{\coker}{coker}
+\newcommand{\Bilin}{\mathrm{Bilin}}
+\newcommand{\Frob}{\mathrm{Frob}}
+
+%Misc
+\newcommand{\ra}{\rightarrow}
+\newcommand{\e}[1]{\mathrm{e}^{#1}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\cc}{C_{\ast}}
+\newcommand{\rmv}[1]{\overset{\curlywedge}{#1}}
+\newcommand{\sx}[2][\ast]{S_{#1}(#2)}
+\newcommand{\cx}[2][\ast]{C_{#1}(#2)}
+\newcommand{\rcx}[2][\ast]{\tilde{C}_{#1}(#2)}
+\newcommand{\scx}[3][\ast]{C_{#1}^{\mathcal{U}#2}(#3)}
+\newcommand{\hg}[2][\ast]{H_{#1}(#2)}
+\newcommand{\rhg}[2][\ast]{\tilde{H}_{#1}(#2)}
+\newcommand{\shg}[3][\ast]{H_{#1}^{\mathcal{U}#2}(#3)}
+\newcommand{\an}[1]{\langle #1\rangle}
